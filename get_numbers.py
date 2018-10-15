@@ -25,7 +25,7 @@ def main():
     from sys import stdin
 
     try:
-        weights = numpy.loadtxt('weights')
+        weights = numpy.loadtxt('weights.txt.gz')
     except OSError:
         weights = numpy.array([
             [1/3, 1/3, 1/3],
@@ -57,6 +57,8 @@ def main():
         print(pred_pulled, PULL_VALUE, sep='\t')
     else:
         print(pred, pred_pulled, sep='\t')
+
+    numpy.savetxt('weights.txt.gz', weights, delimiter='\t')
 
 
 if __name__ == '__main__':
