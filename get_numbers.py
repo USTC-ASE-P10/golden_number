@@ -39,6 +39,16 @@ def main():
     history = data[::-1, 0]
 
     # add or remove weights here
+    ratios = [0.1, 0.3, 0.5]
+    scores = numpy.fromiter(map(score, weights), float)
+    wnum = weights.shape[0]
+    index = numpy.argsort(scores)[int(-0.3 * wnum):]
+    weights_ = weights[index]
+    for weight1 in weights_:
+        for weight2 in weights_:
+            for ind, ratio in enumerate(ratios):
+                new_weight = weight1 * ratio + weight2 * (1 - ratio)
+                numpy.vstack((weights, new_weight))
 
     scores = numpy.fromiter(map(score, weights), float)
     pred = predict(history[:WEIGHT_LENGTH], weights[scores.argmax()])
