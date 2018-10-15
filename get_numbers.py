@@ -1,5 +1,7 @@
 from functools import lru_cache
 import numpy
+import os
+import sys
 
 WEIGHT_LENGTH = 50
 TEST_TIMES = 5
@@ -22,23 +24,22 @@ def score(weight):
     return _score(tuple(weight))
 
 
-def main():
+def main(stdin=sys.stdin):
     global GUESS_COUNT
     global weights, data, history
     from random import random
-    from sys import stdin
 
     try:
         weights = numpy.loadtxt('weights.txt.gz')
     except OSError:
-        weights = numpy.array([
-            [1/3, 1/3, 1/3],
-            [1/2, 1/2, 0],
-            [1, 0, 0],
-            [1/2, 1/3, 1/6],
-        ], float)
+        files = os.listdir('weights')
+        weights = numpy.concatenate([numpy.loadtxt(f'weights/{file}') for file in files])
 
-    data = numpy.loadtxt(stdin, skiprows=1)
+    data = numpy.loadtxt(stdin, skiprows=1, ndmin=2)
+    if len(data) < TEST_TIMES:
+        print('10\t20\n')
+        numpy.savetxt('weights.txt.gz', weights, delimiter='\t')
+        return
     GUESS_COUNT = data.shape[1] - 1
     history = data[::-1, 0]
 

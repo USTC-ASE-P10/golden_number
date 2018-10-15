@@ -7,8 +7,8 @@ def test_round(round):
     os.system('timeout 5 python3 get_numbers.py <_test_input >_test_output')
     try:
         output = numpy.loadtxt('_test_output', delimiter='\t')
-        assert output.shape == 1, 2
-        guess1, guess2 = output[0]
+        assert output.shape == (2,)
+        guess1, guess2 = output
         assert 0 < guess1 < 100 and 0 < guess2 < 100
     except:
         guess1, guess2 = 0, 0
@@ -16,7 +16,7 @@ def test_round(round):
     guesses = numpy.concatenate([[guess1, guess2], data[round][1:]])
     winner = abs(guesses - result).argmin()
     score = winner in (0, 1)
-    print(f'{round:4d}: score={score:d}, result={result}, guess1={guess1}, guess2={guess2}')
+    print(f'{round:4d}: score={score:d}, result={result}, guess1={guess1}, guess2={guess2}, best={guesses[winner]}')
     return score
 
 
