@@ -14,8 +14,12 @@ def predict(value, weight):
 
 
 @lru_cache(65536)
-def score(weight):
+def _score(weight):
     return -sum(history[i] - predict(history[i+1:i+1+WEIGHT_LENGTH], weight) for i in range(TEST_TIMES))
+
+
+def score(weight):
+    return _score(tuple(weight))
 
 
 def main():
