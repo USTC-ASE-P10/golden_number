@@ -3,15 +3,16 @@ import os
 
 
 def test_round(round):
-    numpy.savetxt('_test_input', data[:round], delimiter='\t', header=f'{round}\t{column_count}\n')
-    os.system('timeout 5 python3 get_numbers.py <_test_input >_test_output')
+    numpy.savetxt(f'_test_input_{ID}', data[:round], delimiter='\t', header=f'{round}\t{column_count}\n')
+    os.system(f'timeout 5 python3 get_numbers.py <_test_input_{ID} >_test_output_{ID}')
     try:
-        output = numpy.loadtxt('_test_output', delimiter='\t')
+        output = numpy.loadtxt(f'_test_output_{ID}', delimiter='\t')
         assert output.shape == (2,)
         guess1, guess2 = output
         assert 0 < guess1 < 100 and 0 < guess2 < 100
     except:
-        guess1, guess2 = 0, 0
+        print(f'{round:4d}: FAIL!')
+        return -100
     result = data[round][0]
     guesses = numpy.concatenate([[guess1, guess2], data[round][1:]])
     winner = abs(guesses - result).argmin()
@@ -20,8 +21,11 @@ def test_round(round):
     return score
 
 
-def main(file):
-    global data, column_count, row_count
+def main(file, test_times):
+    global ID, TEST_TIMES, data, column_count, row_count
+
+    ID = f'{file.replace("/", "_")}_{test_times}'
+    TEST_TIMES = test_times
 
     path = f'tests/{file}.txt'
     if not os.path.exists(path):
@@ -34,4 +38,4 @@ def main(file):
 
 if __name__ == '__main__':
     from sys import argv
-    main(argv[1])
+    main(argv[1], int(argv[2]))
