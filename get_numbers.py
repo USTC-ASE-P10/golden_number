@@ -3,7 +3,7 @@ import os
 import sys
 
 WEIGHT_LENGTH = 50
-PULL_RATIO = 0.05
+PULL_RATIO = 0.001
 PULL_VALUE = 99
 
 
@@ -42,6 +42,7 @@ def main(stdin=sys.stdin, test_times=8):
     if not 0 < pred < 100:
         pred = history[0]
     pred_pulled = (pred / .618 * GUESS_COUNT + (PULL_VALUE - pred)) / GUESS_COUNT * .618
+    pred_pulled = predict(history[:WEIGHT_LENGTH], weights[scores.argsort()[-2]])
     if not 0 < pred_pulled < 100:
         pred_pulled = history[0]
     if random() < PULL_RATIO:

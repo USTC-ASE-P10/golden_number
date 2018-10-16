@@ -3,7 +3,7 @@ import os
 
 
 def test_round(round):
-    numpy.savetxt(f'_test_input_{ID}', data[:round], delimiter='\t', header=f'{round}\t{column_count}\n')
+    numpy.savetxt(f'_test_input_{ID}', data[:round], delimiter='\t', header=f'{round}\t{column_count}')
     os.system(f'timeout 5 python3 get_numbers.py <_test_input_{ID} >_test_output_{ID}')
     try:
         output = numpy.loadtxt(f'_test_output_{ID}', delimiter='\t')
